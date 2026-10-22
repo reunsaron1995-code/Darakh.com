@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="km"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10131b"><meta name="description" content="Darakh.com — Khmer AI video translation tools prototype"><title>Darakh.com — AI Video Translator</title>
+<style>
+:root{--bg:#0d1016;--panel:#171b24;--line:#29313e;--cyan:#11c9df;--blue:#2865ef;--muted:#9ca7b7;--text:#f4f7fb}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172034,#0d1016 50%);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Khmer",sans-serif}header{padding:17px 16px 13px;border-bottom:1px solid #242b37;background:#11151e}.brand{display:flex;align-items:center;gap:11px}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:23px;font-weight:900;background:linear-gradient(135deg,#2365f4,#b329ec)}h1{font-size:20px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:2px 0 0}.langrow{display:flex;gap:8px;margin-top:14px}.pill{border:1px solid var(--line);background:#1b202b;border-radius:12px;padding:9px 12px;font-size:13px}.active{border-color:#376ee9;background:#1b2c4d}main{max-width:760px;margin:auto;padding:16px 14px 90px}.intro{text-align:center;padding:17px 8px 20px}.symbol{font-size:38px}.intro h2{font-size:23px;margin:6px 0}.intro p,.hint{color:var(--muted);font-size:13px;line-height:1.7}.intro p{margin:0}.card{background:linear-gradient(150deg,#191e28,#12161e);border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:15px}.section-title{font-size:16px;margin:0 0 13px}.drop{border:1.5px dashed #315c6b;background:#07141a;border-radius:18px;min-height:185px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px 14px}.film{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:#0b252d;color:#56d8e9;font-size:29px;border:1px solid #1d4750}.drop h3{margin:11px 0 4px;font-size:17px}.drop p{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.6}button,.upload-label{border:0;color:white;font:inherit;font-weight:700;cursor:pointer;border-radius:13px;padding:12px 17px;background:linear-gradient(105deg,var(--blue),#08b9d1);display:inline-flex;align-items:center;justify-content:center;gap:8px}input[type=file]{display:none}.fileinfo{font-size:12px;color:#80e6d8;margin-top:10px;overflow-wrap:anywhere}.preview{display:none;margin-top:14px;border:1px solid #303b4a;border-radius:14px;padding:12px}.preview video{width:100%;max-height:300px;border-radius:10px;background:#05070a}.fieldlabel{display:block;font-size:13px;color:#bac5d4;margin:0 0 7px}select{width:100%;background:#0e1219;color:#edf3fb;border:1px solid #343e4d;border-radius:12px;padding:13px;font:inherit}.notice{border:1px solid #344566;background:#131f35;border-radius:14px;padding:12px;color:#a9c8ff;font-size:13px;line-height:1.7;margin-top:13px}.two,.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.voice{padding:14px 8px;border:1px solid #454c5b;background:#11151c;border-radius:14px;color:#d5dbe5}.voice.selected{background:linear-gradient(120deg,#3a1e3a,#202947);border-color:#d34ea8}.secondary{background:#222a38;border:1px solid #3c485a}.hint{margin:8px 0 0}.bottom{position:fixed;bottom:0;left:0;right:0;background:#11151eef;border-top:1px solid #2b3341;padding:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.bottom div{border:1px solid #303b4a;background:#191e29;border-radius:12px;text-align:center;padding:10px 4px;font-size:12px;color:#aeb9c9}.bottom div:first-child{border-color:#168eac;color:#67e5f4}footer{text-align:center;color:#687486;font-size:11px;padding:5px 0 22px}@media(min-width:600px){main{padding-top:22px}.card{padding:21px}.drop{min-height:215px}}
+
+.results-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.count{min-width:34px;text-align:center;background:#242a35;border-radius:9px;padding:7px 10px;color:#e8edf5;font-size:13px}
+.results-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0}
+.results-actions button{font-size:12px;padding:11px 8px}
+.results-actions button:disabled{opacity:.45;cursor:not-allowed}
+.delete-btn{background:#2b1b25;border:1px solid #613040;color:#f6a8b7;box-shadow:none}
+.empty-results{min-height:86px;border:1px dashed #263a35;border-radius:15px;background:#0e1518;display:grid;place-items:center;text-align:center;padding:18px;color:#77828f;font-size:14px}
+.results-card{border-color:#1d3a32;background:linear-gradient(150deg,#171f24,#12161e)}
+
+
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ai-tool{min-height:91px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;text-align:left;background:#111720;border:1px solid #303b4a;box-shadow:none;padding:12px;font-size:22px}
+.ai-tool span{font-size:13px;line-height:1.45}.ai-tool small{font-size:11px;font-weight:400;color:#9ca7b7}
+.ai-tool.selected{border-color:#24bed3;background:linear-gradient(130deg,#102d3b,#20203a);box-shadow:0 0 14px #16b8cf22}
+.ai-workspace{border-top:1px solid #2a3340;margin-top:15px;padding-top:15px}
+.field{resize:vertical;min-height:100px;width:100%;background:#0e1219;color:#edf3fb;border:1px solid #343e4d;border-radius:12px;padding:13px;font:inherit}
+.ai-controls{margin-top:12px}.ai-output-wrap{margin-top:14px}
+@media(min-width:520px){.ai-grid{grid-template-columns:repeat(3,1fr)}}
+
+
+[hidden]{display:none!important}
+.bottom .navtab{border:1px solid #303b4a;background:#191e29;border-radius:12px;text-align:center;padding:10px 4px;font-size:12px;color:#aeb9c9;box-shadow:none;display:block}
+.bottom .navtab.active{border-color:#168eac;color:#67e5f4;box-shadow:0 0 15px #13bfd333}
+
+
+.account-row{display:flex;justify-content:flex-end;margin-top:12px}
+.account-btn{padding:10px 14px;border-radius:13px;background:linear-gradient(110deg,#345ff0,#9a35ef);box-shadow:0 0 18px #6d48f044;font-size:13px}
+.auth-backdrop{position:fixed;inset:0;background:#05070bdc;backdrop-filter:blur(8px);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.auth-modal{width:min(100%,440px);max-height:92vh;overflow:auto;position:relative;background:linear-gradient(155deg,#1b2230,#10141c);border:1px solid #364052;border-radius:23px;padding:24px 19px;box-shadow:0 24px 80px #0009}
+.auth-close{position:absolute;right:13px;top:11px;background:#272e3a;border:1px solid #424b5c;box-shadow:none;padding:3px 10px;font-size:25px}
+.auth-logo{width:48px;height:48px;display:grid;place-items:center;margin:0 auto 10px;border-radius:15px;background:linear-gradient(135deg,#2365f4,#b329ec);font-weight:900;font-size:24px}
+.auth-modal h2{text-align:center;font-size:21px;margin:5px 0}.auth-subtitle{text-align:center;color:#9ca7b7;font-size:12px;line-height:1.6;margin:0 0 17px}
+.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}.auth-mode{background:#111720;border:1px solid #303b4a;box-shadow:none}.auth-mode.active{background:#1b2e50;border-color:#3977f5}
+.google-btn{width:100%;background:#f8fafc;color:#222a35;box-shadow:none;border:1px solid #d5dce5}.google-g{font-size:19px;font-weight:900;color:#4285f4;background:#fff;border-radius:50%;width:25px;height:25px;display:grid;place-items:center}
+.auth-divider{display:flex;align-items:center;gap:10px;color:#7f8a9c;font-size:12px;margin:17px 0}.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:#303847}
+.auth-input{margin-bottom:2px}.auth-security{font-size:11px;line-height:1.7;color:#9aa8bb;background:#111720;border:1px solid #303847;border-radius:12px;padding:10px;margin:13px 0 0}.auth-status{font-size:12px;color:#83e3d3;line-height:1.6;margin:10px 0 0}
+
+</style></head><body><header><div class="brand"><div class="logo">D</div><div><h1>Darakh.com</h1><p>AI Video Translator · Khmer</p></div></div><div class="account-row"><button type="button" id="accountOpenBtn" class="account-btn">👤 ចុះឈ្មោះ / ចូលគណនី</button></div>
+ <div class="langrow"><div class="pill active">🇰🇭 ភាសាខ្មែរ</div><div class="pill">✨ AI Video Tools</div></div></header>
+<main>
+<div id="videoTranslatePage"><div class="intro"><div class="symbol">🎬</div><h2>បកប្រែវីដេអូដោយ AI</h2><p>បញ្ចូលវីដេអូរបស់អ្នក ហើយរៀបចំបកប្រែ<br>ពីភាសាចិនទៅជាភាសាខ្មែរ</p></div>
+<section class="card"><h3 class="section-title">🎞️ បញ្ចូលវីដេអូ</h3><div class="drop"><div class="film">▣</div><h3>ជ្រើសរើសវីដេអូរបស់អ្នក</h3><p>ជ្រើសឯកសារពីទូរសព្ទ ដើម្បីមើល Preview<br>គាំទ្រ MP4, MOV, WEBM</p><label class="upload-label" for="videoFile">⬆️ Upload វីដេអូ</label><input id="videoFile" type="file" accept="video/*"><div class="fileinfo" id="fileInfo"></div></div><div class="preview" id="previewBox"><video id="videoPreview" controls playsinline></video><p class="hint">Preview វីដេអូដែលបានជ្រើសរើស។</p></div></section>
+<section class="card"><h3 class="section-title">🌐 ភាសាបកប្រែ</h3><label class="fieldlabel" for="sourceLang">ភាសាដើមក្នុងវីដេអូ</label><select id="sourceLang"><option>ចិន (Chinese)</option><option>អង់គ្លេស (English)</option><option>ភាសាផ្សេងទៀត</option></select><br><br><label class="fieldlabel" for="targetLang">បកប្រែទៅជា</label><select id="targetLang"><option>ខ្មែរ (Khmer)</option><option>អង់គ្លេស (English)</option><option>ថៃ (Thai)</option></select><div class="notice">✨ គំរូនេះរៀបចំសម្រាប់បកប្រែវីដេអូភាសាចិនទៅខ្មែរ។ មុខងារ AI ពិតត្រូវការភ្ជាប់ API និងប្រព័ន្ធ Server មុននឹងដំណើរការ។</div></section>
+
+
+
+<section class="card"><h3 class="section-title">🎙️ ជ្រើសរើសសំឡេងខ្មែរ</h3><div class="two"><button class="voice selected" type="button">👩 សំឡេងស្រី</button><button class="voice" type="button">👨 សំឡេងប្រុស</button></div><p class="hint">សំឡេងពិតនឹងដំណើរការបន្ទាប់ពីភ្ជាប់សេវា AI សំឡេង។</p></section>
+<section class="card"><h3 class="section-title">⚙️ ការកំណត់លទ្ធផល</h3><label class="fieldlabel" for="duration">រយៈពេលវីដេអូ</label><select id="duration"><option>រក្សារយៈពេលដើម</option><option>ក្រោម 2 នាទី</option><option>2–5 នាទី</option><option>លើស 5 នាទី</option></select><div class="actions" style="margin-top:14px"><button class="secondary" id="previewBtn" type="button">▶️ មើល Preview</button><button id="translateBtn" type="button">✨ ចាប់ផ្ដើមបកប្រែ</button></div><p class="hint">នេះជាគំរូរូបរាង និង Preview ប៉ុណ្ណោះ។ ការបកប្រែ និងបង្កើតវីដេអូថ្មីត្រូវការភ្ជាប់ Backend និង AI API។</p></section>
+<section class="card results-card" id="translatedResults">
+  <div class="results-head">
+    <div>
+      <h3 class="section-title" style="color:#54e69b;margin-bottom:5px">✅ វីដេអូដែលបានបកប្រែ</h3>
+      <p class="hint" style="margin:0">ចុច Preview ដើម្បីមើលលទ្ធផលដែលបានបង្កើត</p>
+    </div>
+    <span class="count" id="resultCount">0</span>
+  </div>
+  <div class="results-actions">
+    <button class="secondary" type="button" id="downloadAllBtn" disabled>⬇️ ទាញយកទាំងអស់</button>
+    <button class="delete-btn" type="button" id="clearResultsBtn">🗑️ សម្អាតទាំងអស់</button>
+  </div>
+  <div class="empty-results" id="emptyResults">មិនទាន់មានវីដេអូដែលបានបកប្រែទេ</div>
+  <p class="hint" style="margin-top:10px">ចំណាំ៖ លទ្ធផលនឹងបង្ហាញនៅទីនេះ នៅពេលភ្ជាប់ប្រព័ន្ធ AI និង Server ដំណើរការពិត។</p>
+</section>
+</div>
+<div id="aiToolsPage" hidden>
+<section class="card" id="aiToolsSection">
+  <h3 class="section-title">✨ AI Tools — ឧបករណ៍ AI</h3>
+  <p class="hint" style="margin-top:-5px;margin-bottom:14px">ឧបករណ៍ជំនួយសម្រាប់អ្នកបង្កើតវីដេអូ។ ជ្រើសរើសមុខងារដែលអ្នកចង់ប្រើ។</p>
+  <div class="ai-grid">
+    <button class="ai-tool selected" type="button" data-tool="translate">🌏<span>បកប្រែអត្ថបទ</span><small>ចិន → ខ្មែរ</small></button>
+    <button class="ai-tool" type="button" data-tool="voice">🗣️<span>បង្កើតសំឡេងខ្មែរ</span><small>សំឡេងស្រី/ប្រុស</small></button>
+    <button class="ai-tool" type="button" data-tool="caption">📝<span>ចំណងជើង និង Caption</span><small>TikTok / Facebook</small></button>
+    <button class="ai-tool" type="button" data-tool="subtitle">🎬<span>Subtitle ខ្មែរ</span><small>អក្សររត់ក្រោមវីដេអូ</small></button>
+    <button class="ai-tool" type="button" data-tool="transcript">🎙️<span>សំឡេងទៅជាអក្សរ</span><small>បម្លែងការនិយាយ</small></button>
+  </div>
+  <div class="ai-workspace">
+    <label class="fieldlabel" for="aiInput" id="aiInputLabel">អត្ថបទដែលចង់បកប្រែ</label>
+    <textarea class="field" id="aiInput" rows="4" placeholder="បញ្ចូលអត្ថបទនៅទីនេះ…"></textarea>
+    <div class="ai-controls">
+      <label class="fieldlabel" for="aiSource">ភាសាដើម</label>
+      <select id="aiSource"><option>ចិន</option><option>អង់គ្លេស</option><option>ខ្មែរ</option></select>
+      <label class="fieldlabel" for="aiTarget" style="margin-top:10px">ភាសាលទ្ធផល</label>
+      <select id="aiTarget"><option>ខ្មែរ</option><option>អង់គ្លេស</option><option>ចិន</option></select>
+    </div>
+    <button class="primary" type="button" id="runAiTool">✨ ដំណើរការ AI Tool</button>
+    <div class="ai-output-wrap" id="aiOutputWrap" hidden>
+      <label class="fieldlabel" for="aiOutput">លទ្ធផល</label>
+      <textarea class="field" id="aiOutput" rows="4" readonly></textarea>
+      <div class="actions"><button class="secondary" type="button" id="copyAiOutput">📋 ចម្លងលទ្ធផល</button><button class="secondary" type="button" id="clearAiOutput">🗑️ សម្អាត</button></div>
+    </div>
+    <div class="notice" id="aiNotice">ចំណាំ៖ មុខងារទាំងនេះត្រូវការភ្ជាប់ AI API/Server ដើម្បីបកប្រែ បង្កើតសំឡេង និង Subtitle ពិតប្រាកដ។ ផ្នែកនេះជាគំរូ UI សិន មិនបង្កើតលទ្ធផល AI ពិតនៅឡើយទេ។</div>
+  </div>
+</section>
+</div>
+
+<div class="auth-backdrop" id="authModal" hidden>
+ <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <button class="auth-close" type="button" id="authCloseBtn" aria-label="បិទ">×</button>
+  <div class="auth-logo">D</div>
+  <h2 id="authTitle">គណនី Darakh.com</h2>
+  <p class="auth-subtitle">ចូលគណនី ឬបង្កើតគណនីថ្មីដោយសុវត្ថិភាព</p>
+  <div class="auth-switch"><button type="button" class="auth-mode active" data-mode="login">ចូលគណនី</button><button type="button" class="auth-mode" data-mode="signup">ចុះឈ្មោះ</button></div>
+  <button type="button" id="googleSignInBtn" class="google-btn"><span class="google-g">G</span> បន្តជាមួយ Google</button>
+  <div class="auth-divider"><span>ឬប្រើអ៊ីមែល</span></div>
+  <form id="authForm">
+   <label class="fieldlabel" for="authEmail">អ៊ីមែល Gmail ឬអ៊ីមែលផ្សេង</label>
+   <input class="field auth-input" type="email" id="authEmail" autocomplete="email" placeholder="name@gmail.com" required>
+   <label class="fieldlabel" for="authPassword" style="margin-top:12px">ពាក្យសម្ងាត់</label>
+   <input class="field auth-input" type="password" id="authPassword" autocomplete="current-password" minlength="8" placeholder="យ៉ាងតិច 8 តួអក្សរ" required>
+   <div id="confirmPasswordWrap" hidden><label class="fieldlabel" for="authConfirmPassword" style="margin-top:12px">បញ្ជាក់ពាក្យសម្ងាត់</label><input class="field auth-input" type="password" id="authConfirmPassword" autocomplete="new-password" minlength="8" placeholder="បញ្ចូលម្ដងទៀត"></div>
+   <button type="submit" class="primary" id="authSubmitBtn">ចូលគណនី</button>
+  </form>
+  <p class="auth-security">🔒 សុវត្ថិភាព៖ កុំផ្ញើពាក្យសម្ងាត់ Gmail ឱ្យអ្នកណា។ ការចូល Google ពិតប្រាកដត្រូវការភ្ជាប់ Google OAuth និង Server។</p>
+  <p class="auth-security" style="border-color:#594c25;color:#f3d88b">👑 G Admin ដែលបានកំណត់សម្រាប់គម្រោង៖ <strong>boyjom764@gmail.com</strong><br>សិទ្ធិ Admin ពិតប្រាកដត្រូវកំណត់ និងផ្ទៀងផ្ទាត់នៅ Server បន្ទាប់ពីភ្ជាប់ Google Sign-In។</p>
+  <p class="auth-status" id="authStatus" role="status"></p>
+ </section>
+</div>
+
+<footer>© Darakh.com · Frontend prepared · AI/Server integration pending</footer></main><nav class="bottom"><button type="button" class="navtab active" data-page="videoTranslatePage">🎬<br>បកប្រែវីដេអូ</button><button type="button" class="navtab" data-page="aiToolsPage">✨<br>AI Tools</button><button type="button" class="navtab" data-page="resultsPage">✅<br>លទ្ធផល</button></nav>
+<script>
+const inp=document.getElementById('videoFile'),info=document.getElementById('fileInfo'),box=document.getElementById('previewBox'),vid=document.getElementById('videoPreview');inp.addEventListener('change',()=>{let f=inp.files[0];if(!f)return;info.textContent='បានជ្រើសរើស៖ '+f.name+' · '+(f.size/1048576).toFixed(1)+' MB';vid.src=URL.createObjectURL(f);box.style.display='block'});document.querySelectorAll('.voice').forEach(b=>b.onclick=()=>{document.querySelectorAll('.voice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')});document.getElementById('previewBtn').onclick=()=>{if(!inp.files[0])return alert('សូម Upload វីដេអូជាមុនសិន។');box.style.display='block';vid.scrollIntoView({behavior:'smooth',block:'center'})};document.getElementById('translateBtn').onclick=()=>{if(!inp.files[0])return alert('សូម Upload វីដេអូជាមុនសិន។');alert('នេះជាគំរូសាកល្បងប៉ុណ្ណោះ។ ដើម្បីបកប្រែពិត ត្រូវភ្ជាប់ Backend និង AI API ជាមុនសិន។')};
+
+const aiPresets={
+ translate:{label:'អត្ថបទដែលចង់បកប្រែ',placeholder:'បញ្ចូលអត្ថបទភាសាចិន ឬភាសាផ្សេងៗ…',notice:'ត្រូវភ្ជាប់ AI Translation API ដើម្បីទទួលបានការបកប្រែពិត។'},
+ voice:{label:'អត្ថបទសម្រាប់បង្កើតសំឡេងខ្មែរ',placeholder:'វាយ ឬបិទភ្ជាប់អត្ថបទខ្មែរ ដែលចង់ឱ្យ AI អាន…',notice:'ត្រូវភ្ជាប់សេវា Text-to-Speech ដែលគាំទ្រភាសាខ្មែរ ដើម្បីបង្កើតឯកសារសំឡេងពិត។'},
+ caption:{label:'ព័ត៌មានអំពីវីដេអូ',placeholder:'សរសេរខ្លីៗថាវីដេអូនេះនិយាយអំពីអ្វី…',notice:'ត្រូវភ្ជាប់ AI Text API ដើម្បីបង្កើតចំណងជើង និង Caption ពិត។'},
+ subtitle:{label:'អត្ថបទសម្រាប់ Subtitle',placeholder:'បញ្ចូលអត្ថបទដែលបានស្ដាប់/បកប្រែរួច ដើម្បីរៀបចំជាគំរូ…',notice:'ការបង្កើត Subtitle តាមពេលវេលាសំឡេង ត្រូវការសេវា Speech-to-Text និងប្រព័ន្ធកំណត់ពេល។'},
+ transcript:{label:'សំឡេងទៅជាអក្សរ',placeholder:'ផ្នែកនេះនឹងប្រើឯកសារសំឡេង/វីដេអូដែលបាន Upload…',notice:'ត្រូវភ្ជាប់ Speech-to-Text API ដើម្បីស្ដាប់ និងចម្លងសំឡេងជាអក្សរពិត។'}
+};
+let activeAiTool='translate';
+document.querySelectorAll('.ai-tool').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.ai-tool').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');activeAiTool=btn.dataset.tool;
+ const preset=aiPresets[activeAiTool];document.getElementById('aiInputLabel').textContent=preset.label;document.getElementById('aiInput').placeholder=preset.placeholder;document.getElementById('aiNotice').textContent=preset.notice;
+ document.getElementById('aiOutputWrap').hidden=true;
+}));
+document.getElementById('runAiTool').addEventListener('click',()=>{
+ const text=document.getElementById('aiInput').value.trim();
+ if(!text && activeAiTool!=='transcript'){alert('សូមបញ្ចូលអត្ថបទជាមុនសិន។');return;}
+ document.getElementById('aiOutputWrap').hidden=false;
+ document.getElementById('aiOutput').value='មិនទាន់អាចដំណើរការ AI ពិតបានទេ។ សូមភ្ជាប់ AI API និង Backend របស់ Darakh.com ជាមុនសិន។';
+ document.getElementById('aiNotice').textContent=aiPresets[activeAiTool].notice;
+});
+document.getElementById('copyAiOutput').addEventListener('click',async()=>{
+ const out=document.getElementById('aiOutput');try{await navigator.clipboard.writeText(out.value);alert('បានចម្លងលទ្ធផល។')}catch(e){out.select();alert('សូមចុច Copy ពីម៉ឺនុយទូរសព្ទ។')}
+});
+document.getElementById('clearAiOutput').addEventListener('click',()=>{document.getElementById('aiOutput').value='';document.getElementById('aiInput').value='';document.getElementById('aiOutputWrap').hidden=true;});
+
+
+document.querySelectorAll('.navtab').forEach(btn=>btn.addEventListener('click',()=>{
+  const target=btn.dataset.page;
+  ['videoTranslatePage','aiToolsPage','resultsPage'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.hidden=(id!==target);
+  });
+  document.querySelectorAll('.navtab').forEach(b=>b.classList.toggle('active',b===btn));
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+
+const authModal=document.getElementById('authModal');
+const authOpen=()=>{authModal.hidden=false;document.body.style.overflow='hidden';};
+const authClose=()=>{authModal.hidden=true;document.body.style.overflow='';};
+document.getElementById('accountOpenBtn').addEventListener('click',authOpen);
+document.getElementById('authCloseBtn').addEventListener('click',authClose);
+authModal.addEventListener('click',e=>{if(e.target===authModal)authClose();});
+let authMode='login';
+document.querySelectorAll('.auth-mode').forEach(btn=>btn.addEventListener('click',()=>{
+ authMode=btn.dataset.mode;
+ document.querySelectorAll('.auth-mode').forEach(b=>b.classList.toggle('active',b===btn));
+ document.getElementById('authTitle').textContent=authMode==='login'?'ចូលគណនី Darakh.com':'បង្កើតគណនី Darakh.com';
+ document.getElementById('authSubmitBtn').textContent=authMode==='login'?'ចូលគណនី':'បង្កើតគណនី';
+ document.getElementById('confirmPasswordWrap').hidden=authMode!=='signup';
+ document.getElementById('authPassword').autocomplete=authMode==='login'?'current-password':'new-password';
+ document.getElementById('authStatus').textContent='';
+}));
+document.getElementById('authForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const email=document.getElementById('authEmail').value.trim();
+ const pass=document.getElementById('authPassword').value;
+ if(pass.length<8){document.getElementById('authStatus').textContent='ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច 8 តួអក្សរ។';return;}
+ if(authMode==='signup'&&pass!==document.getElementById('authConfirmPassword').value){document.getElementById('authStatus').textContent='ពាក្យសម្ងាត់ទាំងពីរមិនដូចគ្នាទេ។';return;}
+ document.getElementById('authStatus').textContent='នេះជាគំរូចំណុចប្រទាក់ប៉ុណ្ណោះ។ គណនីមិនទាន់ត្រូវបានបង្កើត/ចូលពិតទេ រហូតដល់ភ្ជាប់ប្រព័ន្ធ Authentication នៅ Server។';
+});
+document.getElementById('googleSignInBtn').addEventListener('click',()=>{
+ document.getElementById('authStatus').textContent='ប៊ូតុង Google ត្រូវការភ្ជាប់ Google OAuth Client ID និង Backend មុននឹងចូលគណនីពិតបាន។ មិនត្រូវបញ្ចូលពាក្យសម្ងាត់ Gmail នៅទីនេះទេ។';
+});
+
+</script></body></html>
