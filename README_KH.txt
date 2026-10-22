@@ -1,27 +1,24 @@
-DARAKH.COM — PROJECT FOR SERVER + AI (STARTER)
+Darakh.com — Chinese video to Khmer voice dubbing (starter)
 
-អ្វីដែលកំណែនេះអាចធ្វើបាន បន្ទាប់ពី Deploy និងដាក់ API key ត្រឹមត្រូវ៖
-- បើកគេហទំព័រ Darakh.com តាម Server
-- Upload វីដេអូ (MP4/MOV/WEBM/M4V) ទៅ Server
-- AI ស្តាប់សំឡេងចិនជាអក្សរ និងបកប្រែអត្ថបទទៅភាសាខ្មែរ
-- បង្ហាញអត្ថបទចិន និងអត្ថបទខ្មែរនៅលើទំព័រ
+អ្វីដែលកូដនេះព្យាយាមធ្វើ៖
+1. ទទួលវីដេអូ MP4/MOV/WEBM/M4V (អតិបរមា 100 MB)។
+2. ដកសំឡេងចេញ ហើយប្រើ OpenAI speech transcription ដើម្បីសរសេរភាសាចិន។
+3. បកប្រែអត្ថបទចិនទៅជាភាសាខ្មែរ។
+4. ប្រើ OpenAI text-to-speech ដើម្បីបង្កើតសំឡេងខ្មែរ។
+5. បញ្ចូលសំឡេងខ្មែរជំនួសសំឡេងដើម ហើយបញ្ជូន MP4 ឱ្យទាញយក។
 
-អ្វីដែលមិនទាន់មាន៖
-- មិនទាន់បង្កើត MP4 ថ្មីដែលមានសំឡេងខ្មែរ ឬ Subtitle ស្រាប់ទេ
-- មិនទាន់មាន Login ពិត, Google OAuth, database, user accounts ឬ admin authorization ពិតទេ
-- ត្រូវធ្វើការសាកល្បងបន្ទាប់ពី deploy; មិនអាចធានាថាដំណើរការ 100% មុនសាកល្បងទេ
+ដាក់ពង្រាយ៖
+- ដាក់ឯកសារទាំងអស់ក្នុង root នៃ GitHub repository: index.html, server.js, package.json, Dockerfile, README_KH.txt.
+- នៅ Render បង្កើត New > Web Service ហើយភ្ជាប់ GitHub repository នេះ។
+- Environment: Runtime/Environment = Docker (Render should detect Dockerfile); set OPENAI_API_KEY as a secret environment variable. Never put the key in HTML, GitHub, chat, or screenshots.
+- Optional: TTS_VOICE=alloy. You may try another supported voice if available.
+- Deploy, then open https://YOUR-SERVICE.onrender.com/api/health. Expect JSON with ok:true and aiConfigured:true.
+- Open the service URL itself to use the site.
 
-សុវត្ថិភាព:
-- កុំដាក់ API key ក្នុង index.html ឬ GitHub
-- កុំផ្ញើ API key/password មក ChatGPT
-- ដាក់ OPENAI_API_KEY នៅក្នុង Environment Variables របស់ Render តែប៉ុណ្ណោះ
-- API usage អាចគិតថ្លៃ។ សូមពិនិត្យតម្លៃ និងទទួលការយល់ព្រមពីមនុស្សពេញវ័យដែលជួយគ្រប់គ្រងគម្រោង មុនបើកការប្រើប្រាស់ដែលអាចគិតថ្លៃ។
-
-DEPLOY (ត្រូវធ្វើនៅលើគណនីរបស់អ្នក):
-1. Upload ឯកសារទាំងអស់ក្នុង folder នេះទៅ GitHub repository មួយ ដោយឱ្យ index.html, server.js, package.json និង Dockerfile នៅ root ដូចគ្នា។
-2. ចូល Render ហើយបង្កើត New > Web Service; connect repository នោះ; ជ្រើស Docker runtime/ Dockerfile.
-3. ពេល Deploy រួច ចូល Environment របស់ service ហើយបន្ថែម key OPENAI_API_KEY ជាមួយ API key របស់អ្នក។ កុំដាក់ key នៅក្នុង GitHub។
-4. បើក https://YOUR-SERVICE.onrender.com/api/health ដើម្បីពិនិត្យថា server ឡើងហើយឬនៅ។
-5. បើ health បង្ហាញ aiConfigured true នោះ server មើលឃើញ API key; ត្រូវសាកល្បង upload វីដេអូខ្លីមួយទៀត។
-
-សម្គាល់៖ ខ្ញុំមិនអាចចូលគណនី GitHub/Render របស់អ្នក ឬ Deploy ជំនួសអ្នកពីក្នុង chat បានទេ។ ZIP នេះជាឯកសាររៀបចំសម្រាប់ជំហានបន្ទាប់ មិនមែនការភ្ជាប់ live រួចហើយទេ។
+សំខាន់ និងដែនកំណត់៖
+- មិនទាន់មាន Google OAuth/login ពិតប្រាកដ, database, job queue, progress tracking, subtitles ឬ sync lip timing ទេ។
+- សំឡេង TTS ជាភាសាខ្មែរអាចមិនសូវធម្មជាតិ ឬបញ្ចេញសំឡេងមិនល្អគ្រប់ពាក្យទេ; ត្រូវសាកល្បងមុនប្រើ។
+- សំឡេងដើម/តន្ត្រីដើមត្រូវបានជំនួសដោយសំឡេងខ្មែរ។ វាមិនរក្សាតន្ត្រីផ្ទៃក្រោយទេ ហើយសំឡេងខ្មែរមិនទាន់ sync តាមពេលវេលានិយាយដើម។
+- TTS/audio API calls អាចមានការគិតថ្លៃ។ សូមពិនិត្យតម្លៃ និងកំណត់ usage limits មុនប្រើ។ អ្នកប្រើអាយុក្រោម 18 គួរឱ្យមនុស្សពេញវ័យដែលទុកចិត្តជួយពិនិត្យការចំណាយ។
+- Code has not been deployed or end-to-end tested. API/model availability, provider limits, server memory, and FFmpeg behavior must be tested after deployment.
+- Do not upload private/confidential videos without permission. Ensure you have rights to process the video.
